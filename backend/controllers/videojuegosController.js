@@ -14,7 +14,6 @@ exports.getAllVideojuegos = async (req, res) => {
 exports.getVideojuegoById = async (req, res) => {
   try {
     const videojuego = await Videojuego.findById(req.params.id);
-    console.log("el id de mi db es ", req.params.id)
     if (!videojuego) return res.status(404).json({ message: 'Videojuego no encontrado' });
     res.json(videojuego);
   } catch (err) {
@@ -65,6 +64,25 @@ exports.deleteVideojuego = async (req, res) => {
     }
 
     res.json({ message: 'Videojuego eliminado' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Comparar videojuegos por precio
+exports.compararVideojuegosPorPrecio = async (req, res) => {
+  try {
+    const precio = parseFloat(req.params.precio);
+    const idVideojuego = req.params.id; 
+    
+    const videojuegos = await Videojuego.find({ precio: precio, _id: { $ne: idVideojuego } });
+
+    if (videojuegos.length === 0) {
+
+      res.json({ message: 'No hay otros videojuegos con el mismo precio.' });
+    } else {
+      res.json(videojuegos);
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

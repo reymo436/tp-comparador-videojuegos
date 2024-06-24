@@ -10,7 +10,6 @@
     margin-right: 20px;
 }
 
-
 /*LISTA VIDEOJUEGOS*/
 .table td,
 .table th {
@@ -40,6 +39,10 @@
     .card {
         text-align: center;
     }
+}
+
+.cuerpoTabla {
+    background-color: #82acff95;
 }
 
 /*MODAL*/
@@ -73,4 +76,11 @@
 .form-control-custom:focus {
     border-color: #007bff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.SubtitComparar{
+ background-color: #343a40;
+ color: white;
+ padding: 10px;
+ margin-bottom: 20px;
 }

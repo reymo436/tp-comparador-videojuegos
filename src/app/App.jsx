@@ -13,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<PageInicio />} />
           <Route path="/crud" element={<PageCrud />} />
-          <Route path="/comparar" element={<PageComparar />} />
+          <Route path="/comparar/:id" element={<PageComparar />} />
         </Routes>
       </div>
     </Router>

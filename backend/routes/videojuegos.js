@@ -7,5 +7,6 @@ router.get('/:id', videojuegosController.getVideojuegoById);
 router.post('/', videojuegosController.createVideojuego);
 router.put('/:id', videojuegosController.updateVideojuego);
 router.delete('/:id', videojuegosController.deleteVideojuego);
+router.get('/comparar/:precio/:id', videojuegosController.compararVideojuegosPorPrecio);
 
 module.exports = router;
