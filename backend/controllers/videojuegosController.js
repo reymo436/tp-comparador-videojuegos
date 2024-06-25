@@ -33,8 +33,6 @@ exports.createVideojuego = async (req, res) => {
   }
 };
 
-
-
 // Actualizar un videojuego
 exports.updateVideojuego = async (req, res) => {
   const { nombre, anno, precio, imagen } = req.body;
@@ -53,33 +51,57 @@ exports.updateVideojuego = async (req, res) => {
   }
 };
 
-
 // Eliminar un videojuego
 exports.deleteVideojuego = async (req, res) => {
   try {
     const videojuego = await Videojuego.findByIdAndDelete(req.params.id);
-
     if (!videojuego) {
       return res.status(404).json({ message: 'Videojuego no encontrado' });
     }
-
     res.json({ message: 'Videojuego eliminado' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// Comparar videojuegos por precio
-exports.compararVideojuegosPorPrecio = async (req, res) => {
+// Comparar videojuegos por similitud de nombre
+exports.compararVideojuegosPorNombre = async (req, res) => {
   try {
-    const precio = parseFloat(req.params.precio);
-    const idVideojuego = req.params.id; 
-    
-    const videojuegos = await Videojuego.find({ precio: precio, _id: { $ne: idVideojuego } });
+    const { nombreParcial, id } = req.params;
+
+    const videojuegos = await Videojuego.find({
+      $and: [
+        { _id: { $ne: id } },
+        { nombre: { $regex: nombreParcial, $options: 'i' } }
+      ]
+    });
 
     if (videojuegos.length === 0) {
+      res.json({ message: 'No hay otros videojuegos con similitud en el nombre.' });
+    } else {
+      res.json(videojuegos);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-      res.json({ message: 'No hay otros videojuegos con el mismo precio.' });
+// Obtener videojuegos con el mismo precio pero sin similitud en el nombre
+exports.compararVideojuegosPorPrecioSinSimilitudNombre = async (req, res) => {
+  try {
+    const { precio, id, nombreParcial } = req.params;
+    const parsedPrecio = parseFloat(precio);
+
+    const videojuegos = await Videojuego.find({
+      $and: [
+        { _id: { $ne: id } },
+        { precio: parsedPrecio },
+        { nombre: { $not: { $regex: nombreParcial, $options: 'i' } } }
+      ]
+    });
+
+    if (videojuegos.length === 0) {
+      res.json({ message: 'No hay videojuegos con el mismo precio pero sin similitud en el nombre.' });
     } else {
       res.json(videojuegos);
     }
